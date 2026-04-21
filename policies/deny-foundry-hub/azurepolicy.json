@@ -1,0 +1,46 @@
+{
+  "name": "deny-foundry-hub",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "properties": {
+    "displayName": "Deny creation of Azure AI Foundry Hub",
+    "description": "Denies the creation of Azure AI Foundry Hub workspaces (Microsoft.MachineLearningServices/workspaces with kind 'Hub'). This policy helps enforce governance by preventing unauthorized or unintended deployment of AI Foundry Hubs.",
+    "policyType": "Custom",
+    "mode": "All",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Machine Learning"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy. Allowed values: Deny, Audit, Disabled."
+        },
+        "allowedValues": [
+          "Deny",
+          "Audit",
+          "Disabled"
+        ],
+        "defaultValue": "Deny"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.MachineLearningServices/workspaces"
+          },
+          {
+            "field": "Microsoft.MachineLearningServices/workspaces/kind",
+            "equals": "Hub"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}
